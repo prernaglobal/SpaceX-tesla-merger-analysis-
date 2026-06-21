@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The $5 Trillion Merger Nobody Can Price — SpaceX + Tesla | Prerna Dudhmande</title>
+<meta name="description" content="Independent M&A research dashboard: a hypothetical SpaceX + Tesla merger, modeled with DCF, merger mechanics, governance and probability-weighted valuation.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,440;0,9..144,560;0,9..144,680;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#0B1815;
+    --bg-panel:#11211D;
+    --bg-panel-2:#152C26;
+    --line: rgba(236,231,220,0.09);
+    --line-strong: rgba(236,231,220,0.16);
+    --teal-primary:#1C5852;
+    --teal-bright:#46A693;
+    --bronze:#B8773F;
+    --bronze-light:#D9A66C;
+    --paper:#F4F1EA;
+    --text-primary:#ECE7DC;
+    --text-muted:#8FA39C;
+    --text-dim:#587068;
+    --red-neg:#C96B62;
+    --green-pos:#6FB88A;
+    --maxw:1080px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg-deep);
+    color:var(--text-primary);
+    font-family:'Inter',sans-serif;
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 28px;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  .serif{font-family:'Fraunces',serif;}
+  a{color:inherit;}
+
+  /* ---------- ticker ---------- */
+  .ticker-bar{
+    background:var(--bg-panel);
+    border-bottom:1px solid var(--line);
+    overflow:hidden;
+    white-space:nowrap;
+    padding:9px 0;
+  }
+  .ticker-track{
+    display:inline-flex;
+    animation: ticker 38s linear infinite;
+  }
+  @media (prefers-reduced-motion: reduce){ .ticker-track{ animation:none; } }
+  .ticker-track span{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12.5px;
+    letter-spacing:0.02em;
+    color:var(--text-muted);
+    padding:0 28px;
+    border-right:1px solid var(--line-strong);
+  }
+  .ticker-track span b{color:var(--bronze-light); font-weight:600;}
+  .ticker-track span.neg{color:var(--red-neg);}
+  @keyframes ticker{ from{transform:translateX(0);} to{transform:translateX(-50%);} }
+
+  /* ---------- hero ---------- */
+  header.hero{padding:84px 0 56px; border-bottom:1px solid var(--line);}
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11.5px;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    color:var(--bronze-light);
+    margin-bottom:18px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{content:""; width:22px; height:1px; background:var(--bronze-light); display:inline-block;}
+  h1.title{
+    font-family:'Fraunces',serif;
+    font-weight:560;
+    font-size:clamp(34px, 5.6vw, 58px);
+    line-height:1.06;
+    letter-spacing:-0.01em;
+    max-width:880px;
+    color:var(--text-primary);
+  }
+  h1.title em{font-style:italic; font-weight:500; color:var(--bronze-light);}
+  .subtitle{
+    font-family:'Fraunces',serif;
+    font-style:italic;
+    font-weight:500;
+    font-size:clamp(20px,2.6vw,26px);
+    color:var(--teal-bright);
+    margin-top:14px;
+  }
+  .hero-desc{
+    max-width:620px;
+    color:var(--text-muted);
+    font-size:16.5px;
+    margin-top:22px;
+  }
+  .byline{
+    margin-top:30px;
+    font-size:14px;
+    color:var(--text-dim);
+    border-top:1px solid var(--line);
+    padding-top:18px;
+    max-width:620px;
+  }
+  .byline b{color:var(--text-primary); font-weight:600;}
+  .cta-row{display:flex; flex-wrap:wrap; gap:12px; margin-top:30px;}
+  .btn{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12.5px;
+    letter-spacing:0.04em;
+    text-decoration:none;
+    padding:12px 20px;
+    border-radius:3px;
+    border:1px solid var(--line-strong);
+    color:var(--text-primary);
+    transition:all .2s ease;
+    display:inline-flex; align-items:center; gap:8px;
+  }
+  .btn:hover{border-color:var(--bronze-light); color:var(--bronze-light); transform:translateY(-1px);}
+  .btn.primary{background:var(--bronze); border-color:var(--bronze); color:#1A1208;}
+  .btn.primary:hover{background:var(--bronze-light); border-color:var(--bronze-light); color:#1A1208;}
+
+  /* ---------- stat strip ---------- */
+  .stat-strip{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    border-bottom:1px solid var(--line);
+  }
+  .stat-card{
+    padding:26px 24px;
+    border-right:1px solid var(--line);
+  }
+  .stat-card:last-child{border-right:none;}
+  .stat-label{font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-dim); margin-bottom:10px;}
+  .stat-value{font-family:'Fraunces',serif; font-weight:600; font-size:26px; color:var(--text-primary);}
+  .stat-sub{font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--text-muted); margin-top:6px;}
+  .stat-sub.neg{color:var(--red-neg);}
+
+  /* ---------- sections ---------- */
+  section{padding:64px 0; border-bottom:1px solid var(--line);}
+  h2.sec-title{
+    font-family:'Fraunces',serif;
+    font-weight:560;
+    font-size:clamp(24px,3vw,32px);
+    max-width:680px;
+    margin-bottom:14px;
+  }
+  .sec-desc{color:var(--text-muted); max-width:640px; font-size:15.5px; margin-bottom:36px;}
+  .sec-desc b{color:var(--text-primary); font-weight:600;}
+
+  /* ---------- breakeven scale (signature) ---------- */
+  .scale-wrap{margin-top:10px;}
+  .scale-track{
+    position:relative;
+    height:14px;
+    border-radius:7px;
+    background:var(--bg-panel-2);
+    overflow:visible;
+    margin:64px 0 86px;
+  }
+  .zone-acc{position:absolute; left:0; top:0; height:100%; background:linear-gradient(90deg, rgba(111,184,138,0.35), rgba(111,184,138,0.18)); border-radius:7px 0 0 7px;}
+  .zone-dil{position:absolute; top:0; height:100%; background:linear-gradient(90deg, rgba(201,107,98,0.22), rgba(201,107,98,0.40)); border-radius:0 7px 7px 0;}
+  .be-pin{position:absolute; top:50%; width:2px; height:46px; background:var(--bronze-light); transform:translate(-50%,-50%);}
+  .be-pin .be-label{
+    position:absolute; top:-46px; left:50%; transform:translateX(-50%);
+    font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--bronze-light);
+    white-space:nowrap; text-align:center; line-height:1.4;
+  }
+  .be-pin .be-label small{display:block; color:var(--text-dim); font-size:10px; letter-spacing:0.04em;}
+  .r-marker{position:absolute; top:50%; width:16px; height:16px; border-radius:50%; background:var(--bg-deep); border:2.5px solid var(--text-primary); transform:translate(-50%,-50%); z-index:2;}
+  .r-marker .r-label{
+    position:absolute; top:26px; left:50%; transform:translateX(-50%);
+    font-family:'IBM Plex Mono',monospace; font-size:12px; white-space:nowrap; text-align:center; line-height:1.5;
+  }
+  .r-marker .r-label .rt{color:var(--text-primary); font-weight:600;}
+  .r-marker .r-label .rv{display:block; color:var(--red-neg); font-size:11.5px; margin-top:2px;}
+  .scale-ends{display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--text-dim); margin-top:8px;}
+
+  .ratio-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line); margin-top:18px;}
+  .ratio-cell{background:var(--bg-panel); padding:20px;}
+  .ratio-cell .rc-ratio{font-family:'Fraunces',serif; font-weight:600; font-size:22px; color:var(--bronze-light);}
+  .ratio-cell .rc-row{display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:12.5px; margin-top:10px; color:var(--text-muted);}
+  .ratio-cell .rc-row b{color:var(--red-neg); font-weight:600;}
+  .ratio-cell .rc-row.highlight b{color:var(--green-pos);}
+
+  /* ---------- DCF bars ---------- */
+  .dcf-grid{display:grid; grid-template-columns:1fr 1fr; gap:48px;}
+  @media (max-width:720px){ .dcf-grid{grid-template-columns:1fr;} }
+  .dcf-co{}
+  .dcf-co-name{font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:0.08em; color:var(--text-muted); margin-bottom:18px;}
+  .bars{display:flex; align-items:flex-end; gap:22px; height:200px;}
+  .bar-col{display:flex; flex-direction:column; align-items:center; flex:1; height:100%; justify-content:flex-end;}
+  .bar{width:100%; max-width:74px; border-radius:3px 3px 0 0; position:relative; transition:height 1s cubic-bezier(.2,.8,.2,1);}
+  .bar.current{background:var(--bronze);}
+  .bar.implied{background:var(--teal-bright);}
+  .bar-val{font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600; margin-bottom:8px; color:var(--text-primary);}
+  .bar-tag{font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--text-dim); margin-top:10px; text-align:center;}
+  .dcf-delta{font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--red-neg); margin-top:16px;}
+
+  /* ---------- governance ---------- */
+  .gov-row{margin-bottom:34px;}
+  .gov-label{font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--text-muted); margin-bottom:10px; display:flex; justify-content:space-between;}
+  .gov-track{position:relative; height:30px; background:var(--bg-panel-2); border-radius:4px; overflow:hidden;}
+  .gov-fill{position:absolute; left:0; top:0; height:100%; border-radius:4px;}
+  .gov-fill.before{background:linear-gradient(90deg, var(--bronze), var(--bronze-light));}
+  .gov-fill.after{background:linear-gradient(90deg, var(--teal-primary), var(--teal-bright));}
+  .gov-fill span{position:absolute; right:12px; top:50%; transform:translateY(-50%); font-family:'IBM Plex Mono',monospace; font-size:12.5px; font-weight:600; color:#0B1815;}
+
+  /* ---------- probability ---------- */
+  .prob-bar{display:flex; height:46px; border-radius:5px; overflow:hidden; margin:28px 0 18px;}
+  .prob-seg{display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#0B1815; font-weight:600;}
+  .prob-seg.nodeal{background:var(--text-dim); color:var(--bg-deep);}
+  .prob-seg.fair{background:var(--teal-bright);}
+  .prob-seg.premium{background:var(--bronze-light);}
+  .prob-legend{display:flex; gap:24px; flex-wrap:wrap; font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--text-muted);}
+  .prob-legend .dot{display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:7px; vertical-align:middle;}
+  .prob-callout{
+    margin-top:32px; padding:22px 26px; background:var(--bg-panel); border:1px solid var(--line-strong); border-left:3px solid var(--bronze-light);
+    display:flex; gap:40px; flex-wrap:wrap;
+  }
+  .prob-callout .pc-item .pc-num{font-family:'Fraunces',serif; font-weight:600; font-size:26px;}
+  .prob-callout .pc-item .pc-lbl{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--text-dim); margin-top:4px;}
+
+  /* ---------- risk matrix ---------- */
+  .risk-table{width:100%; border-collapse:collapse; margin-top:8px;}
+  .risk-table th{
+    text-align:left; font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.08em; text-transform:uppercase;
+    color:var(--text-dim); padding:0 14px 12px; border-bottom:1px solid var(--line-strong); font-weight:500;
+  }
+  .risk-table td{padding:16px 14px; border-bottom:1px solid var(--line); font-size:14.5px; vertical-align:top;}
+  .risk-table tr:last-child td{border-bottom:none;}
+  .risk-cat{font-weight:600; color:var(--text-primary);}
+  .pill{display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:11px; padding:4px 10px; border-radius:20px; font-weight:600;}
+  .pill.high{background:rgba(201,107,98,0.16); color:var(--red-neg);}
+  .pill.medium{background:rgba(217,166,108,0.16); color:var(--bronze-light);}
+
+  /* ---------- verdict ---------- */
+  .verdict-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line);}
+  @media (max-width:720px){ .verdict-grid{grid-template-columns:1fr;} }
+  .verdict-card{background:var(--bg-panel); padding:28px 24px;}
+  .verdict-name{font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--text-dim); margin-bottom:14px;}
+  .verdict-badge{
+    display:inline-block; font-family:'Fraunces',serif; font-weight:600; font-size:21px;
+    padding:5px 0; margin-bottom:12px;
+  }
+  .verdict-badge.neutral{color:var(--bronze-light);}
+  .verdict-badge.hold{color:var(--teal-bright);}
+  .verdict-badge.trim{color:var(--red-neg);}
+  .verdict-pt{font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--text-muted);}
+
+  /* ---------- footer ---------- */
+  footer{padding:46px 0 64px;}
+  .footer-grid{display:flex; justify-content:space-between; flex-wrap:wrap; gap:24px; align-items:flex-start;}
+  .footer-left{max-width:480px;}
+  .footer-byline{font-family:'Fraunces',serif; font-weight:560; font-size:17px;}
+  .footer-disclaimer{color:var(--text-dim); font-size:12.5px; margin-top:10px; line-height:1.6;}
+  .footer-links{display:flex; gap:14px; flex-wrap:wrap;}
+
+  @media (max-width:780px){
+    .stat-strip{grid-template-columns:repeat(2,1fr);}
+    .stat-card:nth-child(2){border-right:none;}
+    .stat-card{border-bottom:1px solid var(--line);}
+  }
+</style>
+</head>
+<body>
+
+<div class="ticker-bar">
+  <div class="ticker-track" id="tickerTrack">
+    <span>TSLA <b>$406.43</b></span>
+    <span>SPCX <b>$200.00</b></span>
+    <span>TSLA DCF IMPLIED <b class="neg">$48.96</b> (-88.0%)</span>
+    <span>SPCX DCF IMPLIED <b class="neg">$10.42</b> (-94.8%)</span>
+    <span>COMBINED MKT CAP <b>$4.12T</b></span>
+    <span>BREAKEVEN RATIO <b>0.1308x</b></span>
+    <span>MUSK SPCX VOTES <b>82–85%</b></span>
+    <span>MUSK PF VOTES <b class="neg">30–36%</b></span>
+    <span>PROB-WEIGHTED VALUE <b>$197.76</b></span>
+    <span>TSLA <b>$406.43</b></span>
+    <span>SPCX <b>$200.00</b></span>
+    <span>TSLA DCF IMPLIED <b class="neg">$48.96</b> (-88.0%)</span>
+    <span>SPCX DCF IMPLIED <b class="neg">$10.42</b> (-94.8%)</span>
+    <span>COMBINED MKT CAP <b>$4.12T</b></span>
+    <span>BREAKEVEN RATIO <b>0.1308x</b></span>
+    <span>MUSK SPCX VOTES <b>82–85%</b></span>
+    <span>MUSK PF VOTES <b class="neg">30–36%</b></span>
+    <span>PROB-WEIGHTED VALUE <b>$197.76</b></span>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Independent M&amp;A Research · June 2026</div>
+    <h1 class="title">The $5 Trillion Merger <em>Nobody Can Price</em></h1>
+    <div class="subtitle">SpaceX + Tesla</div>
+    <p class="hero-desc">A hypothetical stock-for-stock combination, modeled with a full 10-year DCF, sum-of-the-parts, merger mechanics, governance and probability-weighted valuation — and a conclusion the $4.12T headline number hides: it doesn't work for Tesla shareholders at any exchange ratio.</p>
+    <div class="byline"><b>Prerna Dudhmande</b> — B.Tech (Computer Science), Independent Equity &amp; M&amp;A Research Project. Not affiliated with any bank. Not investment advice.</div>
+    <div class="cta-row">
+      <a class="btn primary" data-link="github" href="#">⌥ View full project on GitHub</a>
+      <a class="btn" data-link="linkedin" href="#">in Connect on LinkedIn</a>
+    </div>
+  </div>
+</header>
+
+<div class="stat-strip">
+  <div class="stat-card">
+    <div class="stat-label">Tesla — current vs. DCF</div>
+    <div class="stat-value mono">$406.43</div>
+    <div class="stat-sub neg">DCF implied $48.96 · -88.0%</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">SpaceX — current vs. DCF</div>
+    <div class="stat-value mono">$200.00</div>
+    <div class="stat-sub neg">DCF implied $10.42 · -94.8%</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Combined mkt cap, no premium</div>
+    <div class="stat-value mono">$4.12T</div>
+    <div class="stat-sub">$1.53T + $2.59T, June 16 2026</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Breakeven exchange ratio</div>
+    <div class="stat-value mono">0.1308x</div>
+    <div class="stat-sub neg">vs. 0.3x–0.7x actually discussed</div>
+  </div>
+</div>
+
+<section class="reveal">
+  <div class="wrap">
+    <div class="eyebrow">Merger Mechanics</div>
+    <h2 class="sec-title">The math doesn't work at any ratio anyone would propose</h2>
+    <p class="sec-desc">Solving for the exchange ratio at which pro forma EBITDA-per-share equals Tesla's standalone EBITDA-per-share yields <b>0.1308x</b> — the only point on this scale that doesn't dilute Tesla shareholders. Every ratio actually under discussion sits deep in dilutive territory.</p>
+
+    <div class="scale-wrap">
+      <div class="scale-track" id="scaleTrack">
+        <div class="zone-acc" style="width:16.35%"></div>
+        <div class="zone-dil" style="left:16.35%; width:83.65%"></div>
+        <div class="be-pin" style="left:16.35%">
+          <div class="be-label">0.1308x<small>BREAKEVEN</small></div>
+        </div>
+        <div class="r-marker" style="left:37.5%">
+          <div class="r-label"><span class="rt">0.3x</span><span class="rv">EBITDA/sh -28.7%</span></div>
+        </div>
+        <div class="r-marker" style="left:62.5%">
+          <div class="r-label"><span class="rt">0.5x</span><span class="rv">EBITDA/sh -46.7%</span></div>
+        </div>
+        <div class="r-marker" style="left:87.5%">
+          <div class="r-label"><span class="rt">0.7x</span><span class="rv">EBITDA/sh -57.5%</span></div>
+        </div>
+      </div>
+      <div class="scale-ends"><span>0.0x</span><span>0.8x exchange ratio (TSLA shares per SPCX share)</span></div>
+    </div>
+
+    <div class="ratio-grid">
+      <div class="ratio-cell">
+        <div class="rc-ratio">0.3x</div>
+        <div class="rc-row"><span>EPS accr/(dil)</span><b>-113.4%</b></div>
+        <div class="rc-row"><span>EBITDA accr/(dil)</span><b>-28.7%</b></div>
+        <div class="rc-row highlight"><span>Implied SPCX value</span><b>$121.93</b></div>
+      </div>
+      <div class="ratio-cell">
+        <div class="rc-ratio">0.5x</div>
+        <div class="rc-row"><span>EPS accr/(dil)</span><b>-110.0%</b></div>
+        <div class="rc-row"><span>EBITDA accr/(dil)</span><b>-46.7%</b></div>
+        <div class="rc-row highlight"><span>Implied SPCX value</span><b>$203.22</b></div>
+      </div>
+      <div class="ratio-cell">
+        <div class="rc-ratio">0.7x</div>
+        <div class="rc-row"><span>EPS accr/(dil)</span><b>-108.0%</b></div>
+        <div class="rc-row"><span>EBITDA accr/(dil)</span><b>-57.5%</b></div>
+        <div class="rc-row highlight"><span>Implied SPCX value</span><b>$284.50</b></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="reveal">
+  <div class="wrap">
+    <div class="eyebrow">Standalone Valuation</div>
+    <h2 class="sec-title">Two stocks, neither explained by their own cash flows</h2>
+    <p class="sec-desc">A 10-year DCF on each company, discounted at its own WACC (13.21% Tesla, 14.05% SpaceX), implies both trade overwhelmingly on optionality rather than fundamentals.</p>
+
+    <div class="dcf-grid">
+      <div class="dcf-co">
+        <div class="dcf-co-name">TESLA (TSLA)</div>
+        <div class="bars">
+          <div class="bar-col">
+            <div class="bar-val">$406.43</div>
+            <div class="bar current" style="height:100%"></div>
+            <div class="bar-tag">Current<br>price</div>
+          </div>
+          <div class="bar-col">
+            <div class="bar-val">$48.96</div>
+            <div class="bar implied" style="height:12.0%"></div>
+            <div class="bar-tag">10-yr DCF<br>implied</div>
+          </div>
+        </div>
+        <div class="dcf-delta">-88.0% — 75.2% of EV sits in terminal value</div>
+      </div>
+      <div class="dcf-co">
+        <div class="dcf-co-name">SPACEX (SPCX)</div>
+        <div class="bars">
+          <div class="bar-col">
+            <div class="bar-val">$200.00</div>
+            <div class="bar current" style="height:100%"></div>
+            <div class="bar-tag">Current<br>price</div>
+          </div>
+          <div class="bar-col">
+            <div class="bar-val">$10.42</div>
+            <div class="bar implied" style="height:5.2%"></div>
+            <div class="bar-tag">10-yr DCF<br>implied</div>
+          </div>
+        </div>
+        <div class="dcf-delta">-94.8% — trades at ~394x EV/EBITDA vs. 102.7x for Tesla</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="reveal">
+  <div class="wrap">
+    <div class="eyebrow">Governance</div>
+    <h2 class="sec-title">A plain merger would cost Musk outright control</h2>
+    <p class="sec-desc">A single-class, all-stock combination converts Musk's SpaceX supermajority into large-minority influence at the combined entity — a structural disincentive most commentary misses.</p>
+
+    <div class="gov-row">
+      <div class="gov-label"><span>Musk's voting power — SpaceX today (10:1 dual-class)</span><span>82–85%</span></div>
+      <div class="gov-track"><div class="gov-fill before" style="width:83.8%"><span>83.8%</span></div></div>
+    </div>
+    <div class="gov-row">
+      <div class="gov-label"><span>Musk's pro forma voting power — combined, single-class entity</span><span>30–36%</span></div>
+      <div class="gov-track"><div class="gov-fill after" style="width:33%"><span>~33%</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="reveal">
+  <div class="wrap">
+    <div class="eyebrow">Probability-Weighted Valuation</div>
+    <h2 class="sec-title">The market has roughly already done this math</h2>
+    <p class="sec-desc">Blending deal-probability scenarios consistent with Polymarket and Kalshi pricing produces a probability-weighted SpaceX value within ~1% of where the stock actually trades.</p>
+
+    <div class="prob-bar">
+      <div class="prob-seg nodeal" style="width:45%">No deal · 45%</div>
+      <div class="prob-seg fair" style="width:40%">Fair deal (~0.5x) · 40%</div>
+      <div class="prob-seg premium" style="width:15%">Premium deal (~0.7x) · 15%</div>
+    </div>
+    <div class="prob-legend">
+      <span><span class="dot" style="background:var(--text-dim)"></span>No deal → $164.00</span>
+      <span><span class="dot" style="background:var(--teal-bright)"></span>Fair deal → $203.22</span>
+      <span><span class="dot" style="background:var(--bronze-light)"></span>Premium deal → $284.50</span>
+    </div>
+
+    <div class="prob-callout">
+      <div class="pc-item"><div class="pc-num mono">$197.76</div><div class="pc-lbl">PROBABILITY-WEIGHTED VALUE</div></div>
+      <div class="pc-item"><div class="pc-num mono">$200.00</div><div class="pc-lbl">CURRENT SPCX PRICE</div></div>
+      <div class="pc-item"><div class="pc-num mono" style="color:var(--red-neg)">-1.1%</div><div class="pc-lbl">IMPLIED GAP</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="reveal">
+  <div class="wrap">
+    <div class="eyebrow">Risk</div>
+    <h2 class="sec-title">Five risks, four of them structurally high</h2>
+    <table class="risk-table">
+      <tr><th>Category</th><th>Likelihood</th><th>Impact</th><th>Key driver</th></tr>
+      <tr><td class="risk-cat">Regulatory / antitrust</td><td><span class="pill medium">Medium</span></td><td><span class="pill medium">Medium</span></td><td>CFIUS-adjacent review of a defense contractor combining with a consumer automaker</td></tr>
+      <tr><td class="risk-cat">Execution / integration</td><td><span class="pill high">High</span></td><td><span class="pill high">High</span></td><td>All 11 original xAI co-founders departed within 13 months of the SpaceX/xAI merger</td></tr>
+      <tr><td class="risk-cat">Governance / control</td><td><span class="pill high">High</span></td><td><span class="pill high">High</span></td><td>Musk's voting control collapses from 82–85% to ~30–36% in a plain merger</td></tr>
+      <tr><td class="risk-cat">Market / valuation</td><td><span class="pill high">High</span></td><td><span class="pill high">High</span></td><td>Both stocks priced almost entirely on AI/Robotaxi optionality, not cash flow</td></tr>
+      <tr><td class="risk-cat">Key-man / Musk</td><td><span class="pill high">High</span></td><td><span class="pill high">High</span></td><td>87–91% of Tesla's EV and over half of SpaceX's tied to Musk-led optionality</td></tr>
+    </table>
+  </div>
+</section>
+
+<section class="reveal">
+  <div class="wrap">
+    <div class="eyebrow">Recommendation</div>
+    <h2 class="sec-title">Verdict</h2>
+    <div class="verdict-grid">
+      <div class="verdict-card">
+        <div class="verdict-name">Merger thesis</div>
+        <div class="verdict-badge neutral">NEUTRAL</div>
+        <div class="verdict-pt">Dilutive at every ratio tested; control math argues against a plain-vanilla structure ever being proposed.</div>
+      </div>
+      <div class="verdict-card">
+        <div class="verdict-name">Tesla (TSLA)</div>
+        <div class="verdict-badge hold">HOLD</div>
+        <div class="verdict-pt">12-month PT $410–450, anchored to standalone FSD/Robotaxi optionality, not the merger.</div>
+      </div>
+      <div class="verdict-card">
+        <div class="verdict-name">SpaceX (SPCX)</div>
+        <div class="verdict-badge trim">TRIM</div>
+        <div class="verdict-pt">12-month base case PT $164–190; trades ~25–28% above sell-side consensus on deal optionality.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-left">
+        <div class="footer-byline">Prerna Dudhmande</div>
+        <div class="footer-disclaimer">Independent, self-directed equity &amp; M&amp;A research project, written in institutional pitch-book style to demonstrate financial modeling technique. Not affiliated with, issued by, or endorsed by any investment bank or financial institution. Not investment research or advice. Companion to a 27-page written report and a live 9-tab financial model — all figures as of June 16, 2026.</div>
+      </div>
+      <div class="footer-links">
+        <a class="btn" data-link="github" href="#">⌥ GitHub</a>
+        <a class="btn" data-link="linkedin" href="#">in LinkedIn</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const LINKS = {
+    github: "https://github.com/prernaglobal/SpaceX-tesla-merger-analysis-",
+    linkedin: "https://www.linkedin.com/in/prerna-dudhmande-1082731b5"
+  };
+  document.querySelectorAll('[data-link="github"]').forEach(el => { el.href = LINKS.github; el.target = "_blank"; el.rel = "noopener"; });
+  document.querySelectorAll('[data-link="linkedin"]').forEach(el => { el.href = LINKS.linkedin; el.target = "_blank"; el.rel = "noopener"; });
+</script>
+
+</body>
+</html>
