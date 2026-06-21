@@ -4,8 +4,7 @@
 
 A full institutional-style analysis of a hypothetical stock-for-stock combination of Tesla (TSLA) and SpaceX (SPCX): a 10-year DCF on each company, sum-of-the-parts, merger / accretion-dilution modeling across three exchange ratios, a synergy build, governance and voting-control analysis, and a probability-weighted valuation — cross-checked against real prediction-market pricing.
 
-🔗 **[Live interactive dashboard →](https://YOUR-USERNAME.github.io/spacex-tesla-merger-analysis/)**
-*(replace `YOUR-USERNAME` once Pages is live, or remove this line and use the repo's "Website" link in the About sidebar instead)*
+
 
 ---
 
